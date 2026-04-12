@@ -2,9 +2,11 @@
 
 declare(strict_types=1);
 
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Schema;
 use YezzMedia\Foundation\Data\InstallContext;
 use YezzMedia\OpsAnalytics\Install\ConfigureDefaultRuntimeTrackerInstallStep;
+use YezzMedia\OpsAnalytics\Install\ConfigureOpsAnalyticsAuditInstallStep;
 use YezzMedia\OpsAnalytics\Install\EnsureOpsAnalyticsStoreReadyInstallStep;
 use YezzMedia\OpsAnalytics\Models\OpsAnalyticsTracker;
 use YezzMedia\OpsAnalytics\Support\DefaultRuntimeTracker;
@@ -52,4 +54,27 @@ it('configures the default runtime tracker through the install step when the sto
         ->and($tracker?->getAttribute('is_enabled'))->toBeTrue()
         ->and($tracker?->getAttribute('metadata')['default_tracker'])->toBeTrue()
         ->and($tracker?->getAttribute('configuration_summary'))->toBe(app(DefaultRuntimeTracker::class)->configurationSummary());
+});
+
+it('accepts an already configured analytics audit driver in the published host config', function (): void {
+    $path = config_path('ops-analytics.php');
+
+    File::ensureDirectoryExists(dirname($path));
+
+    File::put($path, <<<'PHP'
+<?php
+
+return [
+    'audit' => [
+        'driver' => env('OPS_ANALYTICS_AUDIT_DRIVER', 'activitylog'),
+    ],
+];
+PHP);
+
+    $step = app(ConfigureOpsAnalyticsAuditInstallStep::class);
+
+    $step->handle(new InstallContext(auditPackages: ['yezzmedia/laravel-ops-analytics']));
+
+    expect(File::get($path))
+        ->toContain("'driver' => env('OPS_ANALYTICS_AUDIT_DRIVER', 'activitylog'),");
 });
