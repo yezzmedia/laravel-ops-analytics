@@ -6,6 +6,13 @@ The format is based on Keep a Changelog and this package follows Semantic Versio
 
 ## [Unreleased]
 
+## [0.1.2] - 2026-04-13
+
+### Fixed
+
+- configured the published host `config/ops-analytics.php` file instead of the package source config during audit install setup
+- accepted the analytics audit driver when it was already configured with the `activitylog` default to avoid failing repeat installs
+
 ## [0.1.1] - 2026-04-12
 
 ### Fixed
