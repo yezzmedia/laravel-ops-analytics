@@ -6,6 +6,13 @@ The format is based on Keep a Changelog and this package follows Semantic Versio
 
 ## [Unreleased]
 
+## [0.1.3] - 2026-04-13
+
+### Fixed
+
+- published the host `config/ops-analytics.php` file automatically inside the audit install flow when it was missing
+- kept analytics audit configuration working for Basecamp and other audit-only installs that do not run ordinary publish steps first
+
 ## [0.1.2] - 2026-04-13
 
 ### Fixed

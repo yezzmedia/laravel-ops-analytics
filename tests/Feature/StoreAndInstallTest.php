@@ -78,3 +78,19 @@ PHP);
     expect(File::get($path))
         ->toContain("'driver' => env('OPS_ANALYTICS_AUDIT_DRIVER', 'activitylog'),");
 });
+
+it('publishes the host config before configuring the analytics audit driver', function (): void {
+    $path = config_path('ops-analytics.php');
+
+    File::delete($path);
+    File::ensureDirectoryExists(dirname($path));
+
+    $step = app(ConfigureOpsAnalyticsAuditInstallStep::class);
+
+    $step->handle(new InstallContext(auditPackages: ['yezzmedia/laravel-ops-analytics']));
+
+    expect($path)
+        ->toBeFile()
+        ->and(File::get($path))
+        ->toContain("'driver' => env('OPS_ANALYTICS_AUDIT_DRIVER', 'activitylog'),");
+});
