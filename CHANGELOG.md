@@ -6,6 +6,13 @@ The format is based on Keep a Changelog and this package follows Semantic Versio
 
 ## [Unreleased]
 
+## [0.1.4] - 2026-04-13
+
+### Fixed
+
+- shipped a null analytics audit driver by default so installs do not require `spatie/laravel-activitylog` unless audit persistence is explicitly enabled
+- aligned package defaults with the supported null-writer runtime path and kept default runtime tracker setup working in Basecamp and other hosts without activitylog
+
 ## [0.1.3] - 2026-04-13
 
 ### Fixed

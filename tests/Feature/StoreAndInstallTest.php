@@ -56,6 +56,12 @@ it('configures the default runtime tracker through the install step when the sto
         ->and($tracker?->getAttribute('configuration_summary'))->toBe(app(DefaultRuntimeTracker::class)->configurationSummary());
 });
 
+it('configures the default runtime tracker without requiring activitylog by default', function (): void {
+    $step = app(ConfigureDefaultRuntimeTrackerInstallStep::class);
+
+    expect(fn () => $step->handle(new InstallContext))->not->toThrow(InvalidArgumentException::class);
+});
+
 it('accepts an already configured analytics audit driver in the published host config', function (): void {
     $path = config_path('ops-analytics.php');
 

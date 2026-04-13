@@ -11,7 +11,7 @@ return [
 
     'audit' => [
         'enabled' => env('OPS_ANALYTICS_AUDIT_ENABLED', true),
-        'driver' => env('OPS_ANALYTICS_AUDIT_DRIVER', 'activitylog'),
+        'driver' => env('OPS_ANALYTICS_AUDIT_DRIVER'),
         'log_name' => env('OPS_ANALYTICS_AUDIT_LOG_NAME', 'ops-analytics'),
     ],
 

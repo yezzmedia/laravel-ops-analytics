@@ -14,6 +14,12 @@ it('binds the null analytics audit writer by default', function (): void {
     expect(app(OpsAnalyticsAuditWriter::class))->toBeInstanceOf(NullOpsAnalyticsAuditWriter::class);
 });
 
+it('ships a null analytics audit driver by default in package config', function (): void {
+    $config = require dirname(__DIR__, 2).'/config/ops-analytics.php';
+
+    expect($config['audit']['driver'])->toBeNull();
+});
+
 it('null analytics audit writer accepts posture refresh events', function (): void {
     $writer = new NullOpsAnalyticsAuditWriter;
 
