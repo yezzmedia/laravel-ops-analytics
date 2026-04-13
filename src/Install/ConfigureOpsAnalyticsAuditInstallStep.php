@@ -15,6 +15,8 @@ final class ConfigureOpsAnalyticsAuditInstallStep implements AuditInstallStep, O
 
     private const DRIVER_WITH_ACTIVITYLOG_DEFAULT = "'driver' => env('OPS_ANALYTICS_AUDIT_DRIVER', 'activitylog'),";
 
+    private const PACKAGE_CONFIG_PATH = __DIR__.'/../../config/ops-analytics.php';
+
     public function key(): string
     {
         return 'configure_ops_analytics_audit';
@@ -38,6 +40,10 @@ final class ConfigureOpsAnalyticsAuditInstallStep implements AuditInstallStep, O
     public function handle(InstallContext $context): void
     {
         $path = config_path('ops-analytics.php');
+
+        if (! is_file($path)) {
+            $this->publishConfig($path);
+        }
 
         if (! is_file($path) || ! is_readable($path)) {
             throw new RuntimeException('Ops analytics config file could not be read for audit configuration.');
@@ -67,5 +73,28 @@ final class ConfigureOpsAnalyticsAuditInstallStep implements AuditInstallStep, O
     public function isOptional(): bool
     {
         return true;
+    }
+
+    private function publishConfig(string $path): void
+    {
+        if (! is_file(self::PACKAGE_CONFIG_PATH) || ! is_readable(self::PACKAGE_CONFIG_PATH)) {
+            throw new RuntimeException('Ops analytics package config file could not be read for audit configuration.');
+        }
+
+        $directory = dirname($path);
+
+        if (! is_dir($directory) && ! @mkdir($directory, 0755, true) && ! is_dir($directory)) {
+            throw new RuntimeException('Ops analytics config directory could not be created for audit configuration.');
+        }
+
+        $config = file_get_contents(self::PACKAGE_CONFIG_PATH);
+
+        if ($config === false) {
+            throw new RuntimeException('Ops analytics package config file could not be loaded for audit configuration.');
+        }
+
+        if (file_put_contents($path, $config) === false) {
+            throw new RuntimeException('Ops analytics config file could not be published for audit configuration.');
+        }
     }
 }
