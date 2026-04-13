@@ -63,9 +63,18 @@ abstract class OpsAnalyticsTestCase extends FoundationTestCase
     {
         parent::setUp();
 
+        $this->forgetPublishedConfig();
+
         $this->ensureTablesExist();
 
         Filament::setCurrentPanel('ops-analytics-test');
+    }
+
+    protected function tearDown(): void
+    {
+        $this->forgetPublishedConfig();
+
+        parent::tearDown();
     }
 
     private function ensureTablesExist(): void
@@ -129,6 +138,15 @@ abstract class OpsAnalyticsTestCase extends FoundationTestCase
                 $table->json('metadata')->nullable();
                 $table->timestamps();
             });
+        }
+    }
+
+    private function forgetPublishedConfig(): void
+    {
+        $path = config_path('ops-analytics.php');
+
+        if (is_file($path)) {
+            @unlink($path);
         }
     }
 }

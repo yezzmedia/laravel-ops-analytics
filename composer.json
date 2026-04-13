@@ -1,6 +1,6 @@
 {
     "name": "yezzmedia/laravel-ops-analytics",
-    "version": "0.1.3",
+    "version": "0.1.4",
     "description": "Ops-facing analytics delivery posture, tracker health, and consent-aware dispatch package for the Yezz Media Laravel platform.",
     "type": "library",
     "license": "MIT",
