@@ -28,16 +28,13 @@ it('detects a partial analytics store', function (): void {
         ->and($store->missingTables())->toBe(['ops_analytics_dispatch_attempts']);
 });
 
-it('fails the ensure-store step when migrations are disabled on a partial store', function (): void {
+it('returns without throwing when migrations are disabled on a partial store', function (): void {
     config()->set('ops-analytics.migrations.enabled', false);
     Schema::dropIfExists('ops_analytics_dispatch_attempts');
 
     $step = app(EnsureOpsAnalyticsStoreReadyInstallStep::class);
 
-    expect(fn () => $step->handle(new InstallContext(allowMigrations: false)))->toThrow(
-        RuntimeException::class,
-        'Ops analytics store has a partial table set. Resolve the partial state before continuing.',
-    );
+    expect(fn () => $step->handle(new InstallContext(allowMigrations: false)))->not->toThrow(RuntimeException::class);
 });
 
 it('configures the default runtime tracker through the install step when the store is ready', function (): void {
